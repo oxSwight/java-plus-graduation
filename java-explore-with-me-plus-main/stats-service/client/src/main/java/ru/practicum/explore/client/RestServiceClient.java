@@ -51,6 +51,7 @@ public class RestServiceClient {
                 );
             }
             return transformResponse(serverResponse);
+
         } catch (HttpStatusCodeException serverError) {
             return ResponseEntity
                     .status(serverError.getStatusCode())
