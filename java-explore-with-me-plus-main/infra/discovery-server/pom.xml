@@ -40,15 +40,16 @@
                 <version>3.1.0</version>
                 <executions>
                     <execution>
+                        <id>copy-discovery-jar</id>
                         <phase>package</phase>
                         <goals>
                             <goal>run</goal>
                         </goals>
                         <configuration>
                             <target>
-                                <mkdir dir="${project.basedir}/../../target" />
                                 <copy file="${project.build.directory}/${project.build.finalName}.jar"
-                                      todir="${project.basedir}/../.." />
+                                      tofile="${project.basedir}/../../discovery-server-0.0.1-SNAPSHOT.jar"
+                                      overwrite="true"/>
                             </target>
                         </configuration>
                     </execution>
@@ -56,6 +57,7 @@
             </plugin>
         </plugins>
     </build>
+
 
 
 </project>
