@@ -11,6 +11,7 @@
     </parent>
 
     <artifactId>discovery-server</artifactId>
+    <packaging>jar</packaging>
 
     <dependencies>
 
