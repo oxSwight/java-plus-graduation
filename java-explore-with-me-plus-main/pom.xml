@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
@@ -7,82 +8,41 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.3.2</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath/>
 	</parent>
-
-	<name>Explore With Me</name>
-	<modules>
-		<module>stats-service</module>
-		<module>ewm-main-service</module>
-	</modules>
 
 	<groupId>ru.practicum</groupId>
 	<artifactId>explore-with-me</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<name>Explore With Me</name>
 	<packaging>pom</packaging>
+
+	<modules>
+		<module>infra</module>
+		<module>core</module>
+		<module>stats</module>
+	</modules>
 
 	<properties>
 		<java.version>21</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<lombok.version>1.18.32</lombok.version>
 		<mapstruct.version>1.5.5.Final</mapstruct.version>
+		<spring.cloud.version>2023.0.3</spring.cloud.version>
 	</properties>
 
-	<dependencies>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring.cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
-		<dependency>
-			<groupId>org.springdoc</groupId>
-			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-			<version>2.5.0</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-configuration-processor</artifactId>
-			<optional>true</optional>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.httpcomponents.client5</groupId>
-			<artifactId>httpclient5</artifactId>
-			<version>5.3.1</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
-		</dependency>
-
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-	</dependencies>
 
 	<build>
 		<pluginManagement>
@@ -96,6 +56,7 @@
 						</systemPropertyVariables>
 					</configuration>
 				</plugin>
+
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
@@ -116,6 +77,7 @@
 						</annotationProcessorPaths>
 					</configuration>
 				</plugin>
+
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-checkstyle-plugin</artifactId>
@@ -128,13 +90,12 @@
 					</configuration>
 					<executions>
 						<execution>
-							<goals>
-								<goal>check</goal>
-							</goals>
 							<phase>compile</phase>
+							<goals><goal>check</goal></goals>
 						</execution>
 					</executions>
 				</plugin>
+
 				<plugin>
 					<groupId>com.github.spotbugs</groupId>
 					<artifactId>spotbugs-maven-plugin</artifactId>
@@ -145,12 +106,11 @@
 					</configuration>
 					<executions>
 						<execution>
-							<goals>
-								<goal>check</goal>
-							</goals>
+							<goals><goal>check</goal></goals>
 						</execution>
 					</executions>
 				</plugin>
+
 				<plugin>
 					<groupId>org.jacoco</groupId>
 					<artifactId>jacoco-maven-plugin</artifactId>
@@ -161,50 +121,22 @@
 					<executions>
 						<execution>
 							<id>jacoco-initialize</id>
-							<goals>
-								<goal>prepare-agent</goal>
-							</goals>
+							<goals><goal>prepare-agent</goal></goals>
 						</execution>
 						<execution>
 							<id>jacoco-check</id>
-							<goals>
-								<goal>check</goal>
-							</goals>
+							<goals><goal>check</goal></goals>
 							<configuration>
 								<rules>
 									<rule>
 										<element>BUNDLE</element>
 										<limits>
-											<limit>
-												<counter>INSTRUCTION</counter>
-												<value>COVEREDRATIO</value>
-												<minimum>0.01</minimum>
-											</limit>
-											<limit>
-												<counter>LINE</counter>
-												<value>COVEREDRATIO</value>
-												<minimum>0.2</minimum>
-											</limit>
-											<limit>
-												<counter>BRANCH</counter>
-												<value>COVEREDRATIO</value>
-												<minimum>0.2</minimum>
-											</limit>
-											<limit>
-												<counter>COMPLEXITY</counter>
-												<value>COVEREDRATIO</value>
-												<minimum>0.2</minimum>
-											</limit>
-											<limit>
-												<counter>METHOD</counter>
-												<value>COVEREDRATIO</value>
-												<minimum>0.2</minimum>
-											</limit>
-											<limit>
-												<counter>CLASS</counter>
-												<value>MISSEDCOUNT</value>
-												<maximum>1</maximum>
-											</limit>
+											<limit><counter>INSTRUCTION</counter><value>COVEREDRATIO</value><minimum>0.01</minimum></limit>
+											<limit><counter>LINE</counter><value>COVEREDRATIO</value><minimum>0.2</minimum></limit>
+											<limit><counter>BRANCH</counter><value>COVEREDRATIO</value><minimum>0.2</minimum></limit>
+											<limit><counter>COMPLEXITY</counter><value>COVEREDRATIO</value><minimum>0.2</minimum></limit>
+											<limit><counter>METHOD</counter><value>COVEREDRATIO</value><minimum>0.2</minimum></limit>
+											<limit><counter>CLASS</counter><value>MISSEDCOUNT</value><maximum>1</maximum></limit>
 										</limits>
 									</rule>
 								</rules>
@@ -213,9 +145,7 @@
 						<execution>
 							<id>jacoco-site</id>
 							<phase>install</phase>
-							<goals>
-								<goal>report</goal>
-							</goals>
+							<goals><goal>report</goal></goals>
 						</execution>
 					</executions>
 				</plugin>

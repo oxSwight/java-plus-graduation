@@ -1,0 +1,4 @@
+spring:
+  application.name: stats-service
+server:
+  servlet.context-path: /api
