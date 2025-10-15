@@ -47,8 +47,11 @@
                         </goals>
                         <configuration>
                             <target>
+                                <!-- Создаём папку discovery-server в корне -->
+                                <mkdir dir="${project.basedir}/../../discovery-server"/>
+                                <!-- Копируем JAR в неё -->
                                 <copy file="${project.build.directory}/${project.build.finalName}.jar"
-                                      tofile="${project.basedir}/../../discovery-server-0.0.1-SNAPSHOT.jar"
+                                      tofile="${project.basedir}/../../discovery-server/discovery-server-0.0.1-SNAPSHOT.jar"
                                       overwrite="true"/>
                             </target>
                         </configuration>
@@ -57,6 +60,7 @@
             </plugin>
         </plugins>
     </build>
+
 
 
 
