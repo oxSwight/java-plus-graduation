@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.explore.dto.EndHitDto;
 import ru.practicum.explore.dto.StatDto;
-import ru.practicum.explore.server.tools.DtoMapper;
 import ru.practicum.explore.server.repository.StatsRepository;
+import ru.practicum.explore.server.tools.DtoMapper;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,27 +16,32 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class StatsServiceImpl implements StatsService {
+
     private final StatsRepository statsRepository;
 
     @Override
-    public List<StatDto> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique) {
+    public List<StatDto> getStats(LocalDateTime start,
+                                  LocalDateTime end,
+                                  List<String> uris,
+                                  boolean unique) {
+
         if (start.isAfter(end)) {
-            throw new ValidationException("End не может быть раньше start");
+            throw new ValidationException("Параметр 'end' не может быть раньше 'start'.");
         }
 
-        if (!uris.isEmpty() && unique) {
-            return statsRepository.getStatsByUriWithUniqueIp(start, end, uris);
-        } else if (uris.isEmpty() && unique) {
-            return statsRepository.getStatsWithUniqueIp(start, end);
-        } else if (!uris.isEmpty()) {
-            return statsRepository.getStatsByUri(start, end, uris);
-        } else {
-            return statsRepository.getStats(start, end);
+        if (unique) {
+            return uris.isEmpty()
+                    ? statsRepository.getStatsWithUniqueIp(start, end)
+                    : statsRepository.getStatsByUriWithUniqueIp(start, end, uris);
         }
+
+        return uris.isEmpty()
+                ? statsRepository.getStats(start, end)
+                : statsRepository.getStatsByUri(start, end, uris);
     }
 
-    @Transactional
     @Override
+    @Transactional
     public void saveHit(EndHitDto endpointHitDto) {
         statsRepository.save(DtoMapper.toEndpointHit(endpointHitDto));
     }
