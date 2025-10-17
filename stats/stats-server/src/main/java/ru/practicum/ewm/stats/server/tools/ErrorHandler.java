@@ -1,4 +1,4 @@
-package ru.practicum.ewm.server.tools;
+package ru.practicum.ewm.stats.server.tools;
 
 import jakarta.validation.ValidationException;
 import lombok.extern.slf4j.Slf4j;

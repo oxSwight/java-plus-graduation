@@ -1,4 +1,4 @@
-package ru.practicum.ewm.dto;
+package ru.practicum.ewm.stats.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EndHitDto {
+public class EndpointHitDto {
     @NotBlank
     String app;
     @NotBlank

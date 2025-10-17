@@ -1,4 +1,4 @@
-package ru.practicum.ewm.server.controller;
+package ru.practicum.ewm.stats.server.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -6,9 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.dto.EndHitDto;
+import ru.practicum.ewm.stats.server.service.StatsService;
+import ru.practicum.ewm.stats.dto.EndpointHitDto;
 import ru.practicum.ewm.dto.StatDto;
-import ru.practicum.ewm.server.service.StatsService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -30,7 +30,7 @@ public class StatsController {
      */
     @PostMapping("/hit")
     @ResponseStatus(HttpStatus.CREATED)
-    public String saveHit(@Valid @RequestBody EndHitDto endpointHitDto) {
+    public String saveHit(@Valid @RequestBody EndpointHitDto endpointHitDto) {
         log.info("Получен запрос на сохранение хита по URI: {}", endpointHitDto.getUri());
         statsService.saveHit(endpointHitDto);
         return "Информация сохранена";

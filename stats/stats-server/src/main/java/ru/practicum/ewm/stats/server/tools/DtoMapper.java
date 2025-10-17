@@ -1,13 +1,13 @@
-package ru.practicum.ewm.server.tools;
+package ru.practicum.ewm.stats.server.tools;
 
 import lombok.experimental.UtilityClass;
-import ru.practicum.ewm.dto.EndHitDto;
-import ru.practicum.ewm.server.model.EndpointHit;
+import ru.practicum.ewm.stats.dto.EndpointHitDto;
+import ru.practicum.ewm.stats.server.model.EndpointHit;
 
 @UtilityClass
 public class DtoMapper {
 
-    public EndpointHit toEndpointHit(EndHitDto endpointHitDto) {
+    public EndpointHit toEndpointHit(EndpointHitDto endpointHitDto) {
         return EndpointHit.builder()
                 .app(endpointHitDto.getApp())
                 .uri(endpointHitDto.getUri())

@@ -1,6 +1,6 @@
-package ru.practicum.ewm.server.service;
+package ru.practicum.ewm.stats.server.service;
 
-import ru.practicum.ewm.dto.EndHitDto;
+import ru.practicum.ewm.stats.dto.EndpointHitDto;
 import ru.practicum.ewm.dto.StatDto;
 
 import java.time.LocalDateTime;
@@ -10,5 +10,5 @@ public interface StatsService {
 
     List<StatDto> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique);
 
-    void saveHit(EndHitDto endpointHitDto);
+    void saveHit(EndpointHitDto endpointHitDto);
 }

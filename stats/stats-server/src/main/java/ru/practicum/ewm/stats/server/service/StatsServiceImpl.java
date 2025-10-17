@@ -1,13 +1,13 @@
-package ru.practicum.ewm.server.service;
+package ru.practicum.ewm.stats.server.service;
 
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.ewm.dto.EndHitDto;
+import ru.practicum.ewm.stats.server.tools.DtoMapper;
+import ru.practicum.ewm.stats.dto.EndpointHitDto;
 import ru.practicum.ewm.dto.StatDto;
-import ru.practicum.ewm.server.repository.StatsRepository;
-import ru.practicum.ewm.server.tools.DtoMapper;
+import ru.practicum.ewm.stats.server.repository.StatsRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -42,7 +42,7 @@ public class StatsServiceImpl implements StatsService {
 
     @Override
     @Transactional
-    public void saveHit(EndHitDto endpointHitDto) {
+    public void saveHit(EndpointHitDto endpointHitDto) {
         statsRepository.save(DtoMapper.toEndpointHit(endpointHitDto));
     }
 }
