@@ -11,7 +11,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 public class StatsDto {
-    String app;
-    String uri;
-    Long hits;
+     String app;
+     String uri;
+     Long hits;
 }
