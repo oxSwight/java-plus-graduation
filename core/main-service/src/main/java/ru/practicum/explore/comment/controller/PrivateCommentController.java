@@ -1,4 +1,4 @@
-package ru.practicum.explore.comment.controller;
+package ru.practicum.ewm.comment.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,48 +13,42 @@ import ru.practicum.explore.comment.service.CommentService;
 @RequestMapping("/users/{userId}/comments")
 @Slf4j
 public class PrivateCommentController {
-
     private final CommentService commentService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CommentDto createComment(@PathVariable Long userId,
-                                    @RequestParam(defaultValue = "0") Long eventId,
+    public CommentDto createComment(@PathVariable Long userId, @RequestParam(defaultValue = "0") Long eventId,
                                     @RequestBody NewCommentDto newCommentDto) {
-        log.info("Создание комментария пользователем {} для события {}: {}", userId, eventId, newCommentDto);
+        log.info("Получили запрос на создание комментария {}", newCommentDto);
         return commentService.createComment(eventId, userId, newCommentDto);
     }
 
     @PatchMapping("/{commentId}")
-    public CommentDto updateComment(@PathVariable Long userId,
-                                    @PathVariable Long commentId,
+    public CommentDto updateComment(@PathVariable Long userId, @PathVariable Long commentId,
                                     @RequestParam(defaultValue = "0") Long eventId,
                                     @RequestBody NewCommentDto newCommentDto) {
-        log.info("Редактирование комментария {} пользователем {}: {}", commentId, userId, newCommentDto);
+        log.info("Получили запрос на редактирование комментария {}", newCommentDto);
         return commentService.updateComment(userId, eventId, commentId, newCommentDto);
     }
 
     @DeleteMapping("/{commentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteComment(@PathVariable Long userId,
-                              @PathVariable Long commentId,
+    public void deleteComment(@PathVariable Long userId, @PathVariable Long commentId,
                               @RequestParam(defaultValue = "0") Long eventId) {
-        log.info("Удаление комментария {} пользователем {}", commentId, userId);
+        log.info("Получили запрос на удаление комментария");
         commentService.deleteComment(userId, eventId, commentId);
     }
 
     @PutMapping("/{commentId}/like")
-    public CommentDto addLike(@PathVariable Long userId,
-                              @PathVariable Long commentId) {
-        log.info("Пользователь {} добавил лайк к комментарию {}", userId, commentId);
+    public CommentDto addLike(@PathVariable Long userId, @PathVariable Long commentId) {
+        log.info("Получили запрос на добавление лайка");
         return commentService.addLike(userId, commentId);
     }
 
     @DeleteMapping("/{commentId}/like")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteLike(@PathVariable Long userId,
-                           @PathVariable Long commentId) {
-        log.info("Пользователь {} удалил лайк с комментария {}", userId, commentId);
+    public void deleteLike(@PathVariable Long userId, @PathVariable Long commentId) {
+        log.info("Получили запрос на удаление лайка");
         commentService.deleteLike(userId, commentId);
     }
 }

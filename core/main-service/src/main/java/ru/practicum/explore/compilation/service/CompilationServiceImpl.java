@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.explore.compilation.dto.CompilationDto;
 import ru.practicum.explore.compilation.dto.NewCompilationDto;
-import ru.practicum.explore.compilation.dto.UpdateCompRequest;
+import ru.practicum.explore.compilation.dto.UpdateCompilationRequest;
 import ru.practicum.explore.compilation.mapper.CompilationMapper;
 import ru.practicum.explore.compilation.model.Compilation;
 import ru.practicum.explore.compilation.repository.CompilationRepository;
@@ -23,92 +23,98 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-@Service
 @RequiredArgsConstructor
+@Service
 @Transactional(readOnly = true)
 public class CompilationServiceImpl implements CompilationService {
-
     private final CompilationRepository compilationRepository;
     private final EventRepository eventRepository;
     private final StatClient statClient;
 
-    @Transactional
     @Override
+    @Transactional
     public CompilationDto addCompilation(NewCompilationDto newCompilationDto) {
-        List<Event> events = Optional.ofNullable(newCompilationDto.getEvents())
-                .filter(ids -> !ids.isEmpty())
-                .map(ids -> getEventsByIds(new ArrayList<>(ids)))
-                .orElse(Collections.emptyList());
-
-        boolean pinned = Optional.ofNullable(newCompilationDto.getPinned()).orElse(false);
-        newCompilationDto.setPinned(pinned);
-
+        Set<Long> eventIds = newCompilationDto.getEvents();
+        List<Event> events;
+        if (eventIds != null && !eventIds.isEmpty()) {
+            events = getSeveralEvents(eventIds.stream().toList());
+        } else {
+            events = Collections.emptyList();
+        }
+        if (newCompilationDto.getPinned() == null) {
+            newCompilationDto.setPinned(false);
+        }
         Compilation compilation = compilationRepository.save(CompilationMapper.toCompilation(newCompilationDto, events));
         return CompilationMapper.toCompilationDto(compilation, mapToEventShort(events));
+
     }
 
-    @Transactional
     @Override
-    public CompilationDto updateCompilation(Long compId, UpdateCompRequest updateRequest) {
+    @Transactional
+    public CompilationDto updateCompilation(Long compId, UpdateCompilationRequest updateCompilationRequest) {
         Compilation compilation = compilationRepository.findById(compId)
-                .orElseThrow(() -> new NotFoundException("Подборка с id=" + compId + " не найдена"));
-
-        Optional.ofNullable(updateRequest.getEvents())
-                .filter(ids -> !ids.isEmpty())
-                .ifPresent(ids -> compilation.setEvents(new HashSet<>(getEventsByIds(new ArrayList<>(ids)))));
-
-        Optional.ofNullable(updateRequest.getPinned()).ifPresent(compilation::setPinned);
-        Optional.ofNullable(updateRequest.getTitle())
-                .filter(title -> !title.isBlank())
-                .ifPresent(compilation::setTitle);
-
+                .orElseThrow(() -> new NotFoundException("Подборка с id: " + compId + " не найдена"));
+        Set<Long> eventIds = updateCompilationRequest.getEvents();
+        if (eventIds != null && !eventIds.isEmpty()) {
+            compilation.setEvents(new HashSet<>(getSeveralEvents(eventIds.stream().toList())));
+        }
+        Boolean pinned = updateCompilationRequest.getPinned();
+        if (pinned != null) {
+            compilation.setPinned(pinned);
+        }
+        String title = updateCompilationRequest.getTitle();
+        if (title != null && !title.isBlank()) {
+            compilation.setTitle(title);
+        }
         return CompilationMapper.toCompilationDto(compilation, mapToEventShort(new ArrayList<>(compilation.getEvents())));
     }
 
-    @Transactional
     @Override
+    @Transactional
     public void deleteCompilation(Long compId) {
         if (!compilationRepository.existsById(compId)) {
-            throw new NotFoundException("Подборка с id=" + compId + " не найдена");
+            throw new NotFoundException("Подборка с id: " + compId + " не найдена");
         }
         compilationRepository.deleteById(compId);
     }
 
     @Override
     public List<CompilationDto> getAllCompilations(Boolean pinned, Integer from, Integer size) {
-        PageRequest page = PageRequest.of(from / size, size);
-        List<Compilation> compilations = pinned == null
-                ? compilationRepository.findAll(page).toList()
-                : compilationRepository.findAllByPinned(page, pinned);
-
-        Map<Long, EventShortDto> eventDtoCache = mapToEventShort(compilations.stream()
-                .flatMap(c -> c.getEvents().stream())
-                .toList())
-                .stream()
-                .collect(Collectors.toMap(EventShortDto::getId, Function.identity(), (a, b) -> a));
-
-        return compilations.stream()
-                .map(c -> CompilationMapper.toCompilationDto(
-                        c,
-                        c.getEvents().stream()
-                                .map(e -> eventDtoCache.get(e.getId()))
-                                .filter(Objects::nonNull)
-                                .toList()
-                ))
-                .toList();
+        PageRequest pageRequest = PageRequest.of(from / size, size);
+        List<Compilation> allCompilations;
+        if (pinned == null) {
+            allCompilations = compilationRepository.findAll(pageRequest).toList();
+        } else {
+            allCompilations = compilationRepository.findAllByPinned(pageRequest, pinned);
+        }
+        Map<Long, EventShortDto> allEventDto = new HashMap<>();
+        mapToEventShort(allCompilations.stream()
+                .flatMap(compilation -> compilation.getEvents().stream()).toList()).stream()
+                .toList().forEach(event -> {
+                    if (!allEventDto.containsKey(event.getId())) {
+                        allEventDto.put(event.getId(), event);
+                    }
+                });
+        List<CompilationDto> compilationDtoList = new ArrayList<>();
+        for (Compilation compilation : allCompilations) {
+            List<EventShortDto> listEventDto = compilation.getEvents().stream().map(event -> allEventDto.get(event.getId()))
+                    .toList();
+            compilationDtoList.add(CompilationMapper.toCompilationDto(compilation, listEventDto));
+        }
+        return compilationDtoList;
     }
 
     @Override
     public CompilationDto getCompilationById(Long compId) {
         Compilation compilation = compilationRepository.findById(compId)
-                .orElseThrow(() -> new NotFoundException("Подборка с id=" + compId + " не найдена"));
+                .orElseThrow(() -> new NotFoundException("Подборка событий с id: " + compId + " не найдена"));
         return CompilationMapper.toCompilationDto(compilation, mapToEventShort(new ArrayList<>(compilation.getEvents())));
     }
 
-    private List<Event> getEventsByIds(List<Long> ids) {
-        List<Event> events = eventRepository.findAllByIdIn(ids);
-        if (events.size() != ids.size()) {
-            throw new NotFoundException("Некоторые события не найдены");
+    private List<Event> getSeveralEvents(List<Long> eventIds) {
+        List<Event> events = eventRepository.findAllByIdIn(eventIds);
+        if (events.size() != eventIds.size()) {
+            throw new NotFoundException("Не удалось найти некоторые события в базе данных");
         }
         return events;
     }
@@ -117,23 +123,20 @@ public class CompilationServiceImpl implements CompilationService {
         if (events.isEmpty()) {
             return Collections.emptyList();
         }
+        LocalDateTime minTime = events.stream().map(Event::getCreatedOn).min(Comparator.comparing(Function.identity())).get();
+        List<String> urisList = events.stream().map(event -> "/events/" + event.getId()).toList();
 
-        LocalDateTime minTime = events.stream()
-                .map(Event::getCreatedOn)
-                .min(Comparator.naturalOrder())
-                .orElse(LocalDateTime.now());
-
-        List<String> uris = events.stream()
-                .map(e -> "/events/" + e.getId())
-                .toList();
-
-        List<StatDto> stats = statClient.getStats(minTime.minusSeconds(1), LocalDateTime.now(), uris, false);
-
-        Map<String, Long> hitsMap = stats.stream()
-                .collect(Collectors.toMap(StatDto::getUri, StatDto::getHits, (a, b) -> a));
-
-        return events.stream()
-                .map(e -> EventMapper.mapToShortDto(e, hitsMap.getOrDefault("/events/" + e.getId(), 0L)))
-                .toList();
+        List<StatDto> statsList = statClient.getStats(minTime.minusSeconds(1), LocalDateTime.now(), urisList, false);
+        return events.stream().map(event -> {
+                    Optional<StatDto> result = statsList.stream()
+                            .filter(statsDto -> statsDto.getUri().equals("/events/" + event.getId()))
+                            .findFirst();
+                    if (result.isPresent()) {
+                        return EventMapper.mapToShortDto(event, result.get().getHits());
+                    } else {
+                        return EventMapper.mapToShortDto(event, 0L);
+                    }
+                })
+                .collect(Collectors.toList());
     }
 }

@@ -21,26 +21,25 @@ public class AdminCategoryController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CategoryDto createCategory(@Valid @RequestBody NewCategoryDto newCategoryDto) {
-        log.info("Создание категории: {}", newCategoryDto);
+    public CategoryDto createCategory(@RequestBody @Valid NewCategoryDto newCategoryDto) {
+        log.info("Пришел запрос на создание категории.");
         return categoryService.createCategory(newCategoryDto);
     }
 
     @DeleteMapping("/{catId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCategory(@PathVariable Long catId) {
-        log.info("Удаление категории с id={}", catId);
+        log.info("Пришел запрос на удаление категории.");
         categoryService.deleteCategory(catId);
     }
 
     @PatchMapping("/{catId}")
-    public CategoryDto updateCategory(@Valid @RequestBody CategoryDto categoryDto,
+    public CategoryDto updateCategory(@RequestBody @Valid CategoryDto categoryDto,
                                       @PathVariable Long catId) {
-        log.info("Обновление категории с id={}", catId);
+        log.info("Пришел запрос на обновление категории.");
         try {
             return categoryService.updateCategory(categoryDto, catId);
         } catch (DataIntegrityViolationException e) {
-            log.warn("Попытка создать дубликат категории: {}", categoryDto.getName());
             throw new DuplicateException("Категория с таким именем уже существует");
         }
     }

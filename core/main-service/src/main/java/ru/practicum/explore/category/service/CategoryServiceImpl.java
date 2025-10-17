@@ -17,6 +17,7 @@ import ru.practicum.explore.exception.NotFoundException;
 
 import java.util.List;
 
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -29,9 +30,8 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDto createCategory(NewCategoryDto newCategoryDto) {
         try {
-            Category category = CategoryMapper.toCategory(newCategoryDto);
-            Category saved = categoryRepository.save(category);
-            return CategoryMapper.toCategoryDto(saved);
+            Category category = categoryRepository.save(CategoryMapper.toCategory(newCategoryDto));
+            return CategoryMapper.toCategoryDto(category);
         } catch (DataIntegrityViolationException e) {
             throw new DuplicateException("Категория с таким именем уже существует");
         }
@@ -53,16 +53,19 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDto updateCategory(CategoryDto categoryDto, Long catId) {
         Category category = checkCategory(catId);
+
         if (!category.getName().equals(categoryDto.getName())) {
             category.setName(categoryDto.getName());
         }
+
         return CategoryMapper.toCategoryDto(category);
     }
 
     @Override
     public List<CategoryDto> getCategories(Integer from, Integer size) {
-        return categoryRepository.findAll(PageRequest.of(from / size, size))
-                .stream()
+        PageRequest pageRequest = PageRequest.of(from / size, size);
+
+        return categoryRepository.findAll(pageRequest).stream()
                 .map(CategoryMapper::toCategoryDto)
                 .toList();
     }

@@ -6,7 +6,7 @@ import ru.practicum.explore.comment.model.Comment;
 
 import java.util.List;
 
-public interface CommentRepo extends JpaRepository<Comment, Long> {
+public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     List<Comment> findAllByEvent_Id(Long id, Pageable pageable);
 }

@@ -2,7 +2,7 @@ package ru.practicum.explore.compilation.service;
 
 import ru.practicum.explore.compilation.dto.CompilationDto;
 import ru.practicum.explore.compilation.dto.NewCompilationDto;
-import ru.practicum.explore.compilation.dto.UpdateCompRequest;
+import ru.practicum.explore.compilation.dto.UpdateCompilationRequest;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ public interface CompilationService {
 
     CompilationDto addCompilation(NewCompilationDto newCompilationDto);
 
-    CompilationDto updateCompilation(Long compId, UpdateCompRequest updateCompRequest);
+    CompilationDto updateCompilation(Long compId, UpdateCompilationRequest updateCompilationRequest);
 
     void deleteCompilation(Long compId);
 

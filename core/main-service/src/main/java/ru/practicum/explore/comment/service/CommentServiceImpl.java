@@ -11,7 +11,7 @@ import ru.practicum.explore.comment.dto.NewCommentDto;
 import ru.practicum.explore.comment.enums.SortType;
 import ru.practicum.explore.comment.mapper.CommentMapper;
 import ru.practicum.explore.comment.model.Comment;
-import ru.practicum.explore.comment.repository.CommentRepo;
+import ru.practicum.explore.comment.repository.CommentRepository;
 import ru.practicum.explore.event.enums.State;
 import ru.practicum.explore.event.model.Event;
 import ru.practicum.explore.event.repository.EventRepository;
@@ -32,7 +32,7 @@ import java.util.Objects;
 @Slf4j
 public class CommentServiceImpl implements CommentService {
 
-    private final CommentRepo commentRepo;
+    private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final EventRepository eventRepository;
 
@@ -52,7 +52,7 @@ public class CommentServiceImpl implements CommentService {
             throw new ValidationException("Данное событие нельзя комментировать");
         }
         Comment comment = CommentMapper.toComment(newCommentDto, event, user);
-        return CommentMapper.toCommentDto(commentRepo.save(comment));
+        return CommentMapper.toCommentDto(commentRepository.save(comment));
     }
 
     @Transactional
@@ -92,7 +92,7 @@ public class CommentServiceImpl implements CommentService {
             throw new ValidationException("Некорректно указан eventId");
         }
         if (comment.getAuthor().getId().equals(userId)) {
-            commentRepo.deleteById(commentId);
+            commentRepository.deleteById(commentId);
         } else {
             throw new ValidationException("Пользователь не оставлял комментарий с указанным Id " + commentId);
         }
@@ -106,13 +106,13 @@ public class CommentServiceImpl implements CommentService {
         if (!Objects.equals(comment.getEvent().getId(), eventId)) {
             throw new ValidationException("Некорректно указан eventId");
         }
-        commentRepo.deleteById(commentId);
+        commentRepository.deleteById(commentId);
     }
 
     @Override
     public List<CommentDto> getAllComments(Long eventId, SortType sortType, Integer from, Integer size) {
         Pageable pageable = PageRequest.of(from / size, size);
-        List<CommentDto> comments = commentRepo.findAllByEvent_Id(eventId, pageable)
+        List<CommentDto> comments = commentRepository.findAllByEvent_Id(eventId, pageable)
                 .stream()
                 .map(CommentMapper::toCommentDto)
                 .toList();
@@ -193,7 +193,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     private Comment checkComment(Long commentId) {
-        return commentRepo.findById(commentId)
+        return commentRepository.findById(commentId)
                 .orElseThrow(() -> new NotFoundException("Комментарий не найден"));
     }
 

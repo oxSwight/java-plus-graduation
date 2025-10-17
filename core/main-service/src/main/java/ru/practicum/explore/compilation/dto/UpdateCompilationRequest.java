@@ -13,7 +13,7 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateCompRequest {
+public class UpdateCompilationRequest {
     Set<Long> events;
     Boolean pinned;
     @Size(min = 1, max = 50)
