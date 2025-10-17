@@ -1,4 +1,0 @@
-spring:
-  application.name: main-service
-server:
-  servlet.context-path: /api
