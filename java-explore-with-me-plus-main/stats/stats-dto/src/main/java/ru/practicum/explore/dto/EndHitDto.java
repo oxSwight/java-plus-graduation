@@ -1,18 +1,28 @@
 package ru.practicum.explore.dto;
 
+
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
+
+import java.time.LocalDateTime;
+
 
 @Getter
-@Setter
-@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class EndHitDto {
-    private Long id;
-    private String app;
-    private String uri;
-    private String ip;
+    @NotBlank
+    String app;
+    @NotBlank
+    String uri;
+    @NotBlank
+    String ip;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private String timestamp;
+    @NotNull
+    LocalDateTime timestamp;
 }
