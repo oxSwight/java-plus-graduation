@@ -15,7 +15,7 @@ import ru.practicum.explore.exception.DuplicateException;
 @RequiredArgsConstructor
 @RequestMapping("/admin/categories")
 @Slf4j
-public class AdminController {
+public class AdminCategoryController {
 
     private final CategoryService categoryService;
 

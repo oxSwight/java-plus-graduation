@@ -14,7 +14,7 @@ import ru.practicum.explore.compilation.service.CompilationService;
 @RequestMapping("/admin/compilations")
 @Slf4j
 @RequiredArgsConstructor
-public class AdminController {
+public class AdminCompilationController {
 
     private final CompilationService compilationService;
 

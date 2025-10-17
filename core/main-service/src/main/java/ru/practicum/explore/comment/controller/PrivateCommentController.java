@@ -12,7 +12,7 @@ import ru.practicum.explore.comment.service.CommentService;
 @RequiredArgsConstructor
 @RequestMapping("/users/{userId}/comments")
 @Slf4j
-public class PrivateController {
+public class PrivateCommentController {
 
     private final CommentService commentService;
 

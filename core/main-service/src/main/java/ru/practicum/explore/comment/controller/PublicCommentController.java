@@ -13,7 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/comments")
 @Slf4j
-public class PublicController {
+public class PublicCommentController {
 
     private final CommentService commentService;
 

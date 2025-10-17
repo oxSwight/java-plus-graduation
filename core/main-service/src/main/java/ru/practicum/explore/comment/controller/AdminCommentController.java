@@ -12,7 +12,7 @@ import ru.practicum.explore.user.dto.UserDtoForAdmin;
 @RequiredArgsConstructor
 @RequestMapping("/admin/comments")
 @Slf4j
-public class AdminController {
+public class AdminCommentController {
     private final CommentService commentService;
 
     @PutMapping("/ban/{userId}")
