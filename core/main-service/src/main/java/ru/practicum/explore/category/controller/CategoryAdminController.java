@@ -48,4 +48,5 @@ public class CategoryAdminController {
         log.info("ADMIN delete category {}", catId);
         service.deleteCategory(catId);
     }
+
 }
