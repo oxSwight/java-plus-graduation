@@ -26,7 +26,7 @@ import ru.practicum.ewm.partrequest.mapper.ParticipationRequestMapper;
 import ru.practicum.ewm.partrequest.model.ParticipationRequest;
 import ru.practicum.ewm.partrequest.repository.ParticipationRequestRepository;
 import ru.practicum.ewm.partrequest.service.ParticipationRequestService;
-import ru.practicum.ewm.stats.client.StatClient;
+import ru.practicum.ewm.stats.client.StatsClient;
 import ru.practicum.ewm.stats.dto.EndpointHitDto;
 import ru.practicum.ewm.stats.dto.StatsDto;
 import ru.practicum.ewm.user.model.User;
@@ -51,7 +51,7 @@ public class EventServiceImpl implements EventService {
 
     private final ParticipationRequestService requestService;
 
-    private final StatClient statClient;
+    private final StatsClient statClient;
 
     @Value("${ewmServiceName}")
     private String serviceName;

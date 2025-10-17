@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.practicum.ewm.stats.dto.EndpointHitDto;
-import ru.practicum.ewm.dto.StatDto;
+import ru.practicum.ewm.stats.dto.StatsDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,8 +21,8 @@ public interface StatsClient {
     String saveHit(@RequestBody EndpointHitDto requestBody);
 
     @GetMapping("/stats")
-    List<StatDto> getStats(@RequestParam @DateTimeFormat(pattern = TIME_PATTERN) LocalDateTime start,
-                           @RequestParam @DateTimeFormat(pattern = TIME_PATTERN) LocalDateTime end,
-                           @RequestParam (defaultValue = "") List<String> uris,
-                           @RequestParam(defaultValue = "false") boolean unique);
+    List<StatsDto> getStats(@RequestParam @DateTimeFormat(pattern = TIME_PATTERN) LocalDateTime start,
+                            @RequestParam @DateTimeFormat(pattern = TIME_PATTERN) LocalDateTime end,
+                            @RequestParam (defaultValue = "") List<String> uris,
+                            @RequestParam(defaultValue = "false") boolean unique);
 }
