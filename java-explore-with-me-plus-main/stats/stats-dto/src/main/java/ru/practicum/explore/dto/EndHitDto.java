@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 
 
 @Getter
+@Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @AllArgsConstructor
