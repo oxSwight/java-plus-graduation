@@ -16,36 +16,39 @@ public class ErrorHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ErrorResponse handleMethodArgumentNotValidExceptions(MethodArgumentNotValidException e) {
+    public ErrorResponse handleMethodArgumentNotValid(MethodArgumentNotValidException e) {
         String message = e.getMessage();
-        log.debug("Получен статус 400 BAD_REQUEST {}", message, e);
+        log.warn("Ошибка валидации аргументов: {}", message);
         return new ErrorResponse(message);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ErrorResponse handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
-        String message = e.getMessage();
-        log.debug("Получен статус 400 BAD_REQUEST {}", message, e);
+    public ErrorResponse handleTypeMismatch(MethodArgumentTypeMismatchException e) {
+        String message = String.format("Неверный тип параметра '%s'. Ожидался другой тип.",
+                e.getName());
+        log.warn("Ошибка типа параметра: {}", message);
         return new ErrorResponse(message);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ErrorResponse handleMissingParameter(MissingServletRequestParameterException e) {
+        log.warn("Отсутствует обязательный параметр запроса: {}", e.getParameterName());
+        return new ErrorResponse("Отсутствует обязательный параметр: " + e.getParameterName());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ValidationException.class)
+    public ErrorResponse handleValidation(ValidationException e) {
+        log.warn("Ошибка валидации: {}", e.getMessage());
+        return new ErrorResponse(e.getMessage());
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
-    public ErrorResponse handleAllExceptions(Exception e) {
-        log.debug("Получен статус 500 INTERNAL_SERVER_ERROR {}", e.getMessage(), e);
-        return new ErrorResponse("Ой у нас чтото сломалось :)");
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler
-    public ErrorResponse handleStartEndDateNotExists(final MissingServletRequestParameterException e) {
-        return new ErrorResponse(e.getMessage());
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler
-    public ErrorResponse handleValidation(final ValidationException e) {
-        return new ErrorResponse(e.getMessage());
+    public ErrorResponse handleUnexpected(Exception e) {
+        log.error("Необработанное исключение: {}", e.getMessage(), e);
+        return new ErrorResponse("Произошла непредвиденная ошибка. Пожалуйста, повторите позже.");
     }
 }
