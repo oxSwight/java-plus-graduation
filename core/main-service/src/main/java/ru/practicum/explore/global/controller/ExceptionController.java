@@ -41,6 +41,15 @@ public class ExceptionController {
         return build(HttpStatus.BAD_REQUEST, "Некорректные данные", ex);
     }
 
+    @ExceptionHandler(org.springframework.web.bind.MissingServletRequestParameterException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiError handleMissingRequestParam(org.springframework.web.bind.MissingServletRequestParameterException ex) {
+        return build(
+                HttpStatus.BAD_REQUEST,
+                "Некорректные данные", ex
+        );
+    }
+
     /* ---------- 403 ---------- */
     @ExceptionHandler(ForbiddenException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
