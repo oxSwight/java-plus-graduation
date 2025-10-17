@@ -26,7 +26,7 @@ import ru.practicum.ewm.partrequest.mapper.ParticipationRequestMapper;
 import ru.practicum.ewm.partrequest.model.ParticipationRequest;
 import ru.practicum.ewm.partrequest.repository.ParticipationRequestRepository;
 import ru.practicum.ewm.partrequest.service.ParticipationRequestService;
-import ru.practicum.ewm.stats.client.StatsClient;
+import ru.practicum.ewm.stats.client.StatClient;
 import ru.practicum.ewm.stats.dto.EndpointHitDto;
 import ru.practicum.ewm.stats.dto.StatsDto;
 import ru.practicum.ewm.user.model.User;
@@ -51,7 +51,7 @@ public class EventServiceImpl implements EventService {
 
     private final ParticipationRequestService requestService;
 
-    private final StatsClient statClient;
+    private final StatClient statClient;
 
     @Value("${ewmServiceName}")
     private String serviceName;
@@ -164,7 +164,7 @@ public class EventServiceImpl implements EventService {
             event.setPaid(updateRequest.getPaid());
         }
         if (updateRequest.getCommenting() != null) {
-           event.setCommenting(updateRequest.getCommenting());
+            event.setCommenting(updateRequest.getCommenting());
         }
         if (updateRequest.getParticipantLimit() != null) {
             event.setParticipantLimit(updateRequest.getParticipantLimit());
@@ -281,7 +281,7 @@ public class EventServiceImpl implements EventService {
 
 
         Optional<StatsDto> stat = statClient.getStats(event.getCreatedOn().minusSeconds(1),
-                        LocalDateTime.now(), List.of("/events/" + event.getId()), true).stream().findFirst();
+                LocalDateTime.now(), List.of("/events/" + event.getId()), true).stream().findFirst();
 
         EventFullDto result = EventMapper.mapToFullDto(event, stat.isPresent() ? stat.get().getHits() : 0L);
 
@@ -413,7 +413,7 @@ public class EventServiceImpl implements EventService {
         event = eventRepository.save(event);
 
         Optional<StatsDto> stat = statClient.getStats(event.getCreatedOn().minusSeconds(1), LocalDateTime.now(),
-                        List.of("/events/" + event.getId()), false).stream().findFirst();
+                List.of("/events/" + event.getId()), false).stream().findFirst();
 
         EventFullDto result = EventMapper.mapToFullDto(event, stat.isPresent() ? stat.get().getHits() : 0L);
 
