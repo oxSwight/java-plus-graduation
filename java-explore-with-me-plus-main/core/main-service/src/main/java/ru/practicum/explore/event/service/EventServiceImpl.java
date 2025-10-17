@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.explore.category.model.Category;
 import ru.practicum.explore.category.repository.CategoryRepository;
-import ru.practicum.explore.client.StatsClient;
+import ru.practicum.explore.client.StatClient;
 import ru.practicum.explore.common.exception.BadRequestException;
 import ru.practicum.explore.common.exception.ConflictException;
 import ru.practicum.explore.common.exception.NotFoundException;
@@ -49,7 +49,7 @@ public class EventServiceImpl implements EventService {
     private final CategoryRepository categoryRepository;
     private final LocationRepository locationRepository;
     private final ParticipationRequestRepository participationRequestRepository;
-    private final StatsClient statsClient;
+    private final StatClient statsClient;
     private static final Map<Long, Set<String>> VIEWS_IP_CACHE = new ConcurrentHashMap<>();
 
     @Override
@@ -683,8 +683,8 @@ public class EventServiceImpl implements EventService {
 
     private long fetchViews(String uri, boolean unique) {
         String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        String start = "2000-01-01 00:00:00";
-        return statsClient.getStats(start, now, List.of(uri), unique)
+        LocalDateTime start = LocalDateTime.parse("2000-01-01 00:00:00");
+        return statsClient.getStats(start, LocalDateTime.parse(now), List.of(uri), unique)
                 .stream()
                 .findFirst()
                 .map(StatDto::getHits)

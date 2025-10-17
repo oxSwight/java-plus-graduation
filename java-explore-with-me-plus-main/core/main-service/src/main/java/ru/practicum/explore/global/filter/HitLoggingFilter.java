@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import ru.practicum.explore.client.StatsClient;
+import ru.practicum.explore.client.StatClient;
 import ru.practicum.explore.dto.EndHitDto;
 
 import java.io.IOException;
@@ -22,7 +22,7 @@ import java.util.Optional;
 @Slf4j
 public class HitLoggingFilter extends OncePerRequestFilter {
 
-    private final StatsClient statsClient;
+    private final StatClient statsClient;
     private static final DateTimeFormatter FMT =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
@@ -48,10 +48,10 @@ public class HitLoggingFilter extends OncePerRequestFilter {
                     .app("ewm-main-service")
                     .uri(uri)
                     .ip(ip)
-                    .timestamp(LocalDateTime.now().format(FMT))
+                    .timestamp(LocalDateTime.parse(LocalDateTime.now().format(FMT)))
                     .build();
             try {
-                statsClient.save(hit);
+                statsClient.saveHit(hit);
             } catch (Exception e) {
                 log.warn("Cannot send hit to stats: {}", e.getMessage());
             }
