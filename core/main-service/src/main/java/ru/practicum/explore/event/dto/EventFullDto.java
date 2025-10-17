@@ -1,43 +1,42 @@
 package ru.practicum.explore.event.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Builder;
-import lombok.Getter;
-import ru.practicum.explore.category.dto.CategoryDtoWithId;
-import ru.practicum.explore.event.model.EventState;
-import ru.practicum.explore.user.dto.UserDtoWithNoEmail;
+import lombok.AccessLevel;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+import ru.practicum.explore.category.dto.CategoryDto;
+import ru.practicum.explore.event.enums.State;
+import ru.practicum.explore.event.model.Location;
+import ru.practicum.explore.user.dto.UserShortDto;
 
 import java.time.LocalDateTime;
 
-@Getter
+import static ru.practicum.explore.formatter.DateTimeFormat.TIME_PATTERN;
+
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class EventFullDto {
-
-    private Long id;
-    private String title;
-    private String annotation;
-    private String description;
-
-    private CategoryDtoWithId category;
-    private Boolean paid;
-
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private LocalDateTime eventDate;
-
-    private UserDtoWithNoEmail initiator;
-    private Long views;
-    private Long confirmedRequests;
-
-    private Integer participantLimit;
-    private Boolean requestModeration;
-
-    private EventState state;
-
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private LocalDateTime createdOn;
-
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private LocalDateTime publishedOn;
-
-    private LocationDto location;
+    Long id;
+    String annotation;
+    CategoryDto category;
+    Integer confirmedRequests;
+    @JsonFormat(pattern = TIME_PATTERN)
+    LocalDateTime createdOn;
+    LocalDateTime publishedOn;
+    String description;
+    @JsonFormat(pattern = TIME_PATTERN)
+    LocalDateTime eventDate;
+    UserShortDto initiator;
+    Location location;
+    Boolean paid;
+    Integer participantLimit;
+    State state;
+    Boolean requestModeration;
+    String title;
+    Long views;
+    Boolean commenting;
 }

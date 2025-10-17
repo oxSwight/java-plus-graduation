@@ -1,134 +1,139 @@
 package ru.practicum.explore.compilation.service;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.explore.common.exception.BadRequestException;
-import ru.practicum.explore.common.exception.NotFoundException;
 import ru.practicum.explore.compilation.dto.CompilationDto;
-import ru.practicum.explore.compilation.dto.RequestCompilationDto;
-import ru.practicum.explore.compilation.mapper.CompilationMapperNew;
+import ru.practicum.explore.compilation.dto.NewCompilationDto;
+import ru.practicum.explore.compilation.dto.UpdateCompRequest;
+import ru.practicum.explore.compilation.mapper.CompilationMapper;
 import ru.practicum.explore.compilation.model.Compilation;
-import ru.practicum.explore.compilation.model.Compilationevents;
 import ru.practicum.explore.compilation.repository.CompilationRepository;
-import ru.practicum.explore.compilation.repository.CompilationeventsRepository;
+import ru.practicum.explore.dto.StatDto;
+import ru.practicum.explore.event.dto.EventShortDto;
+import ru.practicum.explore.event.mapper.EventMapper;
 import ru.practicum.explore.event.model.Event;
 import ru.practicum.explore.event.repository.EventRepository;
+import ru.practicum.explore.exception.NotFoundException;
+import ru.practicum.explore.stats.client.StatClient;
 
+import java.time.LocalDateTime;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 @Transactional(readOnly = true)
 public class CompilationServiceImpl implements CompilationService {
 
-    private final CompilationRepository       compilationRepository;
-    private final CompilationeventsRepository compilationeventsRepository;
-    private final EventRepository             eventRepository;
+    private final CompilationRepository compilationRepository;
+    private final EventRepository eventRepository;
+    private final StatClient statClient;
 
-    @Override
-    public Collection<CompilationDto> getCompilations(Boolean pinned, Integer from, Integer size) {
-        PageRequest page = PageRequest.of(from > 0 ? from / size : 0, size);
-
-        Collection<Compilation> comps = pinned != null
-                ? compilationRepository.findByPinned(pinned, page)
-                : compilationRepository.findAll(page).getContent();
-
-        return CompilationMapperNew.mapToCompilationDto(comps);
-    }
-
-
-    @Override
-    public CompilationDto getCompilation(long compId) {
-        Compilation comp = compilationRepository.findById(compId)
-                .orElseThrow(EntityNotFoundException::new);
-        return CompilationMapperNew.mapToCompilationDto(comp);
-    }
-
-    @Override
     @Transactional
-    public CompilationDto createCompilation(RequestCompilationDto dto) {
+    @Override
+    public CompilationDto addCompilation(NewCompilationDto newCompilationDto) {
+        List<Event> events = Optional.ofNullable(newCompilationDto.getEvents())
+                .filter(ids -> !ids.isEmpty())
+                .map(ids -> getEventsByIds(new ArrayList<>(ids)))
+                .orElse(Collections.emptyList());
 
-        if (dto.getTitle() == null || dto.getTitle().isBlank()) {
-            throw new BadRequestException("Compilation title is required");
-        }
+        boolean pinned = Optional.ofNullable(newCompilationDto.getPinned()).orElse(false);
+        newCompilationDto.setPinned(pinned);
 
-        Compilation comp = new Compilation();
-        comp.setTitle(dto.getTitle());
-        comp.setPinned(dto.getPinned() != null && dto.getPinned());
-
-        comp = compilationRepository.saveAndFlush(comp);
-
-        if (dto.getEvents() != null && !dto.getEvents().isEmpty()) {
-            List<Event> events = eventRepository.findAllById(dto.getEvents());
-            if (events.size() != dto.getEvents().size()) {
-                throw new EntityNotFoundException();
-            }
-            for (Event e : events) {
-                compilationeventsRepository.save(
-                        new Compilationevents(0L, comp.getId(), e.getId()));
-            }
-            comp.setEvents(new ArrayList<>(events));
-        } else {
-            comp.setEvents(new ArrayList<>());
-        }
-        return CompilationMapperNew.mapToCompilationDto(comp);
+        Compilation compilation = compilationRepository.save(CompilationMapper.toCompilation(newCompilationDto, events));
+        return CompilationMapper.toCompilationDto(compilation, mapToEventShort(events));
     }
 
-    @Override
     @Transactional
-    public CompilationDto changeCompilation(long compId,
-                                            RequestCompilationDto dto) {
+    @Override
+    public CompilationDto updateCompilation(Long compId, UpdateCompRequest updateRequest) {
+        Compilation compilation = compilationRepository.findById(compId)
+                .orElseThrow(() -> new NotFoundException("Подборка с id=" + compId + " не найдена"));
 
-        Compilation comp = compilationRepository.findById(compId)
-                .orElseThrow(EntityNotFoundException::new);
+        Optional.ofNullable(updateRequest.getEvents())
+                .filter(ids -> !ids.isEmpty())
+                .ifPresent(ids -> compilation.setEvents(new HashSet<>(getEventsByIds(new ArrayList<>(ids)))));
 
-        if (dto.getTitle() != null) {
-            comp.setTitle(dto.getTitle());
-        }
-        if (dto.getPinned() != null) {
-            comp.setPinned(dto.getPinned());
-        }
+        Optional.ofNullable(updateRequest.getPinned()).ifPresent(compilation::setPinned);
+        Optional.ofNullable(updateRequest.getTitle())
+                .filter(title -> !title.isBlank())
+                .ifPresent(compilation::setTitle);
 
-        if (dto.getEvents() != null) {
-            if (dto.getEvents().isEmpty()) {
-                comp.setEvents(comp.getEvents() == null
-                        ? new ArrayList<>()
-                        : new ArrayList<>(comp.getEvents()));
-            } else {
-                Set<Event> current = new HashSet<>(Optional.ofNullable(comp.getEvents())
-                        .orElse(new ArrayList<>()));
-
-                for (Long id : dto.getEvents()) {
-                    Event e = eventRepository.findById(id)
-                            .orElseThrow(() ->
-                                    new NotFoundException("Event id=" + id + " not found"));
-                    if (current.contains(e)) {
-                        throw new DataIntegrityViolationException("Event already in compilation");
-                    }
-                    current.add(e);
-                    compilationeventsRepository.save(
-                            new Compilationevents(0L, comp.getId(), e.getId()));
-                }
-                comp.setEvents(new ArrayList<>(current));
-            }
-        }
-
-        Compilation saved = compilationRepository.saveAndFlush(comp);
-        return CompilationMapperNew.mapToCompilationDto(saved);
+        return CompilationMapper.toCompilationDto(compilation, mapToEventShort(new ArrayList<>(compilation.getEvents())));
     }
 
-    @Override
     @Transactional
-    public void deleteCompilation(long compId) {
+    @Override
+    public void deleteCompilation(Long compId) {
+        if (!compilationRepository.existsById(compId)) {
+            throw new NotFoundException("Подборка с id=" + compId + " не найдена");
+        }
         compilationRepository.deleteById(compId);
-        compilationeventsRepository.deleteAll(
-                compilationeventsRepository.findByCompilationId(compId));
+    }
+
+    @Override
+    public List<CompilationDto> getAllCompilations(Boolean pinned, Integer from, Integer size) {
+        PageRequest page = PageRequest.of(from / size, size);
+        List<Compilation> compilations = pinned == null
+                ? compilationRepository.findAll(page).toList()
+                : compilationRepository.findAllByPinned(page, pinned);
+
+        Map<Long, EventShortDto> eventDtoCache = mapToEventShort(compilations.stream()
+                .flatMap(c -> c.getEvents().stream())
+                .toList())
+                .stream()
+                .collect(Collectors.toMap(EventShortDto::getId, Function.identity(), (a, b) -> a));
+
+        return compilations.stream()
+                .map(c -> CompilationMapper.toCompilationDto(
+                        c,
+                        c.getEvents().stream()
+                                .map(e -> eventDtoCache.get(e.getId()))
+                                .filter(Objects::nonNull)
+                                .toList()
+                ))
+                .toList();
+    }
+
+    @Override
+    public CompilationDto getCompilationById(Long compId) {
+        Compilation compilation = compilationRepository.findById(compId)
+                .orElseThrow(() -> new NotFoundException("Подборка с id=" + compId + " не найдена"));
+        return CompilationMapper.toCompilationDto(compilation, mapToEventShort(new ArrayList<>(compilation.getEvents())));
+    }
+
+    private List<Event> getEventsByIds(List<Long> ids) {
+        List<Event> events = eventRepository.findAllByIdIn(ids);
+        if (events.size() != ids.size()) {
+            throw new NotFoundException("Некоторые события не найдены");
+        }
+        return events;
+    }
+
+    private List<EventShortDto> mapToEventShort(List<Event> events) {
+        if (events.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        LocalDateTime minTime = events.stream()
+                .map(Event::getCreatedOn)
+                .min(Comparator.naturalOrder())
+                .orElse(LocalDateTime.now());
+
+        List<String> uris = events.stream()
+                .map(e -> "/events/" + e.getId())
+                .toList();
+
+        List<StatDto> stats = statClient.getStats(minTime.minusSeconds(1), LocalDateTime.now(), uris, false);
+
+        Map<String, Long> hitsMap = stats.stream()
+                .collect(Collectors.toMap(StatDto::getUri, StatDto::getHits, (a, b) -> a));
+
+        return events.stream()
+                .map(e -> EventMapper.mapToShortDto(e, hitsMap.getOrDefault("/events/" + e.getId(), 0L)))
+                .toList();
     }
 }

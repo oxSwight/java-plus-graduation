@@ -1,73 +1,31 @@
 package ru.practicum.explore.event.service;
 
 import jakarta.servlet.http.HttpServletRequest;
-import ru.practicum.explore.event.dto.EventDto;
-import ru.practicum.explore.event.dto.NewEventDto;
-import ru.practicum.explore.event.dto.PatchEventDto;
-import ru.practicum.explore.event.dto.ResponseEventDto;
+import ru.practicum.explore.event.dto.*;
+import ru.practicum.explore.request.dto.RequestDto;
 
-import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
 
 public interface EventService {
 
-    EventDto getEventById(long userId, long eventId);
+    EventFullDto addEvent(NewEventDto eventDto, Long userId);
 
-    EventDto getPublishedEventById(long eventId);
+    List<EventShortDto> getEventsOfUser(Long userId, Integer from, Integer size);
 
-    EventDto getPublishedEventById(long eventId, Integer views);
+    EventFullDto getEventOfUser(Long userId, Long eventId);
 
-    Collection<ResponseEventDto> getAllUserEvents(long userId, Integer from, Integer size);
+    EventFullDto updateEventOfUser(UpdateEventUserRequest updateRequest, Long userId, Long eventId);
 
-    ResponseEventDto changeEvent(long userId, long eventId, PatchEventDto patchEventDto);
+    List<EventShortDto> getPublicEventsByFilter(HttpServletRequest httpServletRequest, EventPublicFilter inputFilter);
 
-    EventDto createEvent(long userId, PatchEventDto newEventDto);
+    EventFullDto getPublicEventById(HttpServletRequest httpServletRequest, Long id);
 
-    Collection<ResponseEventDto> findEventsByUser(String text,
-                                                  List<Long> categories,
-                                                  Boolean paid,
-                                                  LocalDateTime rangeStart,
-                                                  LocalDateTime rangeEnd,
-                                                  Boolean onlyAvailable,
-                                                  String sort,
-                                                  Integer from,
-                                                  Integer size);
+    List<EventFullDto> getEventsForAdmin(EventAdminFilter admin);
 
-    ResponseEventDto changeEventByAdmin(long eventId, PatchEventDto patchEventDto);
+    EventFullDto updateEventAdmin(Long eventId, UpdateEventAdminRequest updateEventAdminRequest);
 
-    Collection<ResponseEventDto> findEventsByAdmin(List<Long> users,
-                                                   List<String> states,
-                                                   List<Long> categories,
-                                                   LocalDateTime rangeStart,
-                                                   LocalDateTime rangeEnd,
-                                                   Integer from,
-                                                   Integer size);
+    List<RequestDto> getRequestsOfUserEvent(Long userId, Long eventId);
 
-    Collection<ResponseEventDto> getUserEvents(long userId, int from, int size);
-
-    ResponseEventDto getUserEventById(long userId, long eventId);
-
-    Collection<ResponseEventDto> findEvents(String text,
-                                            List<Long> categories,
-                                            Boolean paid,
-                                            LocalDateTime rangeStart,
-                                            LocalDateTime rangeEnd,
-                                            Boolean onlyAvailable,
-                                            String sort,
-                                            Integer from,
-                                            Integer size,
-                                            HttpServletRequest request);
-
-    ResponseEventDto getPublicEvent(long eventId, HttpServletRequest request);
-
-    Collection<ResponseEventDto> findAdminEvents(List<Long> users,
-                                                 List<String> states,
-                                                 List<Long> categories,
-                                                 LocalDateTime rangeStart,
-                                                 LocalDateTime rangeEnd,
-                                                 Integer from,
-                                                 Integer size);
-
-    ResponseEventDto createEvent(long userId, NewEventDto newEventDto);
+    EventRequestStatusUpdateResult updateRequestsStatus(EventRequestStatusUpdateRequest updateRequest, Long userId,
+                                                        Long eventId);
 }

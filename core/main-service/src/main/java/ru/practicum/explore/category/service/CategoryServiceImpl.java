@@ -1,69 +1,79 @@
 package ru.practicum.explore.category.service;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.explore.category.dto.CategoryDto;
-import ru.practicum.explore.category.dto.CategoryDtoWithId;
-import ru.practicum.explore.category.mapper.CategoryMapperNew;
+import ru.practicum.explore.category.dto.NewCategoryDto;
+import ru.practicum.explore.category.mapper.CategoryMapper;
 import ru.practicum.explore.category.model.Category;
 import ru.practicum.explore.category.repository.CategoryRepository;
-import ru.practicum.explore.event.model.Event;
 import ru.practicum.explore.event.repository.EventRepository;
+import ru.practicum.explore.exception.ConflictDataException;
+import ru.practicum.explore.exception.DuplicateException;
+import ru.practicum.explore.exception.NotFoundException;
 
-import java.util.*;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 @Transactional(readOnly = true)
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final EventRepository eventRepository;
 
-    @Override
-    public CategoryDtoWithId getCategory(long catId) {
-        Optional<Category> category = categoryRepository.findById(catId);
-        if (category.isPresent()) return CategoryMapperNew.mapToCategoryDtoWithId(category.get());
-        else throw new EntityNotFoundException();
-    }
-
-    @Override
-    public Collection<CategoryDtoWithId> getAllCategories(Integer from, Integer size) {
-        PageRequest page = PageRequest.of(from > 0 ? from / size : 0, size);
-        return CategoryMapperNew.mapToCategoryDtoWithId(categoryRepository.findAll(page));
-    }
-
-    @Override
     @Transactional
-    public CategoryDtoWithId changeCategory(long catId, CategoryDto categoryDto) {
-        Optional<Category> category = categoryRepository.findById(catId);
-        Optional<Category> name = categoryRepository.findByName(categoryDto.getName());
-        if (category.isPresent()) {
-            if (name.isPresent() && name.get().getId() != (catId))
-                throw new DataIntegrityViolationException("Data integrity violation exception");
-            return CategoryMapperNew.mapToCategoryDtoWithId(categoryRepository.saveAndFlush(CategoryMapperNew.mapToCategory(category.get(), categoryDto)));
-        } else throw new EntityNotFoundException();
+    @Override
+    public CategoryDto createCategory(NewCategoryDto newCategoryDto) {
+        try {
+            Category category = CategoryMapper.toCategory(newCategoryDto);
+            Category saved = categoryRepository.save(category);
+            return CategoryMapper.toCategoryDto(saved);
+        } catch (DataIntegrityViolationException e) {
+            throw new DuplicateException("Категория с таким именем уже существует");
+        }
+    }
+
+    @Transactional
+    @Override
+    public void deleteCategory(Long catId) {
+        if (!categoryRepository.existsById(catId)) {
+            throw new NotFoundException("Категория не найдена");
+        }
+        if (eventRepository.existsByCategoryId(catId)) {
+            throw new ConflictDataException("Нельзя удалить категорию с привязанными событиями");
+        }
+        categoryRepository.deleteById(catId);
+    }
+
+    @Transactional
+    @Override
+    public CategoryDto updateCategory(CategoryDto categoryDto, Long catId) {
+        Category category = checkCategory(catId);
+        if (!category.getName().equals(categoryDto.getName())) {
+            category.setName(categoryDto.getName());
+        }
+        return CategoryMapper.toCategoryDto(category);
     }
 
     @Override
-    @Transactional
-    public void deleteCategory(long catId) {
-        Optional<Event> event = eventRepository.findByCategoryId(catId);
-        if (event.isPresent()) throw new DataIntegrityViolationException("Data integrity violation exception");
-        else categoryRepository.deleteById(catId);
+    public List<CategoryDto> getCategories(Integer from, Integer size) {
+        return categoryRepository.findAll(PageRequest.of(from / size, size))
+                .stream()
+                .map(CategoryMapper::toCategoryDto)
+                .toList();
     }
 
     @Override
-    @Transactional
-    public CategoryDtoWithId createCategory(CategoryDto categoryDto) {
-        Optional<Category> name = categoryRepository.findByName(categoryDto.getName());
-        if (name.isPresent()) throw new DataIntegrityViolationException("Data integrity violation exception");
-        return CategoryMapperNew.mapToCategoryDtoWithId(categoryRepository.saveAndFlush(CategoryMapperNew.mapToCategory(categoryDto)));
+    public CategoryDto getCategoryById(Long catId) {
+        return CategoryMapper.toCategoryDto(checkCategory(catId));
+    }
+
+    private Category checkCategory(Long catId) {
+        return categoryRepository.findById(catId)
+                .orElseThrow(() -> new NotFoundException("Категория не найдена или недоступна"));
     }
 }

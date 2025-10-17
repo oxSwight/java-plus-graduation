@@ -2,15 +2,18 @@ package ru.practicum.explore.category.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class CategoryDto {
+    Long id;
     @NotBlank
-    @Size(max = 50)                    // ограничение из ТЗ
-    private String name;
+    @Size(min = 1, max = 50)
+    String name;
 }

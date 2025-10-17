@@ -1,37 +1,36 @@
 package ru.practicum.explore.user.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+import ru.practicum.explore.event.model.Event;
+
+import java.util.Set;
+
 
 @Entity
 @Table(name = "users")
+@ToString
 @Getter
 @Setter
-@ToString
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@Builder(toBuilder = true)
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "user_id")
+    Long id;
 
-    @Column(name = "name", nullable = false)
-    private String name;
+    @Column(unique = true)
+    String email;
 
-    @Email
-    @Column(name = "email", nullable = false)
-    private String email;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof User)) return false;
-        return id != null && id.equals(((User) o).getId());
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
+    String name;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "ban_comments",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "event_id"))
+    Set<Event> forbiddenCommentEvents;
 }
