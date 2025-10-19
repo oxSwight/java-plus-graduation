@@ -26,12 +26,13 @@ public class ParticipationRequest {
     @Builder.Default
     LocalDateTime created = LocalDateTime.now();
     @ManyToOne
-    @JoinColumn(name = "event_id")
+    @JoinColumn(name = "event_id", nullable = false)
     Event event;
     @ManyToOne
-    @JoinColumn(name = "requester_id")
+    @JoinColumn(name = "requester_id", nullable = false)
     User requester;
     @Enumerated(value = EnumType.STRING)
+    @Column(nullable = false)
     Status status;
 
 

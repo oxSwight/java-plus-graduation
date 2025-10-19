@@ -19,6 +19,7 @@ public class Compilation {
     @Column(name = "compilation_id")
     Long id;
     Boolean pinned;
+    @Column(nullable = false)
     String title;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(joinColumns = @JoinColumn(name = "compilation_id"),

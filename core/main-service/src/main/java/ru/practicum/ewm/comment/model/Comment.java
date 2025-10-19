@@ -23,14 +23,15 @@ public class Comment {
     @Column(name = "comment_id")
     Long id;
 
+    @Column(nullable = false)
     String text;
 
     @ManyToOne
-    @JoinColumn(name = "event_id")
+    @JoinColumn(name = "event_id", nullable = false)
     Event event;
 
     @ManyToOne
-    @JoinColumn(name = "author_id")
+    @JoinColumn(name = "author_id", nullable = false)
     User author;
 
     @ElementCollection

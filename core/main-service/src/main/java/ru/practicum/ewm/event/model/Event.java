@@ -26,7 +26,7 @@ public class Event {
     String annotation;
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id", nullable = false)
     Category category;
 
     @Column(name = "confirmed_requests")
@@ -41,11 +41,11 @@ public class Event {
     @Column(name = "description", length = 7000)
     String description;
 
-    @Column(name = "event_date")
+    @Column(name = "event_date", nullable = false)
     LocalDateTime eventDate;
 
     @ManyToOne
-    @JoinColumn(name = "initiator_id")
+    @JoinColumn(name = "initiator_id", nullable = false)
     User initiator;
     Float lat;
     Float lon;
@@ -55,6 +55,7 @@ public class Event {
     Integer participantLimit;
 
     @Enumerated(value = EnumType.STRING)
+    @Column(nullable = false)
     State state;
 
     @Column(name = "request_moderation")
