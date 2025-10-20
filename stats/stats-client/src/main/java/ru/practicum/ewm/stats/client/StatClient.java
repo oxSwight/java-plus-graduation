@@ -15,7 +15,7 @@ import java.util.List;
 @FeignClient(name = "stats-server")
 public interface StatClient {
 
-    final String TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
+    String TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
 
     @PostMapping("/hit")
     String saveHit(@RequestBody EndpointHitDto requestBody);
