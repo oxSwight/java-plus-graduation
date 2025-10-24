@@ -3,10 +3,6 @@ package ru.practicum.user.service.model;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.ewm.event.model.Event;
-
-import java.util.Set;
-
 
 @Entity
 @Table(name = "users")
@@ -18,19 +14,11 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder(toBuilder = true)
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id", nullable = false)
+    @Column(name = "user_id")
     Long id;
-
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     String email;
-
     String name;
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "ban_comments",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "event_id"))
-    Set<Event> forbiddenCommentEvents;
 }
