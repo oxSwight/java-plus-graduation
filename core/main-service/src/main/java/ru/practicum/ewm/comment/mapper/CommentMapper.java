@@ -1,9 +1,9 @@
 package ru.practicum.ewm.comment.mapper;
 
 import lombok.experimental.UtilityClass;
-import ru.practicum.ewm.comment.dto.CommentDto;
-import ru.practicum.ewm.comment.dto.NewCommentDto;
 import ru.practicum.ewm.comment.model.Comment;
+import ru.practicum.interaction.api.dto.compilation.comment.dto.CommentDto;
+import ru.practicum.interaction.api.dto.compilation.comment.dto.NewCommentDto;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.user.model.User;
 

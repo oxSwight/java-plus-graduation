@@ -1,8 +1,8 @@
 package ru.practicum.ewm.comment.service;
 
-import ru.practicum.ewm.comment.dto.CommentDto;
-import ru.practicum.ewm.comment.dto.NewCommentDto;
 import ru.practicum.ewm.comment.enums.SortType;
+import ru.practicum.interaction.api.dto.compilation.comment.dto.CommentDto;
+import ru.practicum.interaction.api.dto.compilation.comment.dto.NewCommentDto;
 import ru.practicum.ewm.user.dto.UserDtoForAdmin;
 
 import java.util.List;

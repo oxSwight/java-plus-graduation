@@ -5,8 +5,6 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.*;
 import ru.practicum.ewm.event.model.Event;
-import ru.practicum.ewm.partrequest.enums.Status;
-import ru.practicum.ewm.user.model.User;
 
 import java.time.LocalDateTime;
 
