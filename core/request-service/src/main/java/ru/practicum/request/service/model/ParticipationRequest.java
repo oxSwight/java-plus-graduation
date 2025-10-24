@@ -1,10 +1,10 @@
-package ru.practicum.ewm.partrequest.model;
+package ru.practicum.request.service.model;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.experimental.FieldDefaults;
 import lombok.*;
-import ru.practicum.ewm.event.model.Event;
+import lombok.experimental.FieldDefaults;
+import ru.practicum.interaction.api.enums.request.Status;
 
 import java.time.LocalDateTime;
 
@@ -23,14 +23,11 @@ public class ParticipationRequest {
     Long id;
     @Builder.Default
     LocalDateTime created = LocalDateTime.now();
-    @ManyToOne
-    @JoinColumn(name = "event_id", nullable = false)
-    Event event;
-    @ManyToOne
-    @JoinColumn(name = "requester_id")
-    User requester;
+    @Column(name = "event_id", nullable = false)
+    Long eventId;
+    @Column(name = "requester_id")
+    Long requesterId;
     @Enumerated(value = EnumType.STRING)
-    @Column(nullable = false)
     Status status;
 
 
