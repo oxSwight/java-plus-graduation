@@ -1,11 +1,11 @@
-package ru.practicum.interaction.api.dto.compilation.comment.controller;
+package ru.practicum.ewm.comment.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.ewm.comment.enums.SortType;
+import ru.practicum.ewm.comment.service.CommentService;
 import ru.practicum.interaction.api.dto.compilation.comment.dto.CommentDto;
-import ru.practicum.interaction.api.dto.compilation.comment.enums.SortType;
-import ru.practicum.interaction.api.dto.compilation.comment.service.CommentService;
 
 import java.util.List;
 

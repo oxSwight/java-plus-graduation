@@ -1,4 +1,4 @@
-package ru.practicum.interaction.api.dto.compilation.comment.service;
+package ru.practicum.ewm.comment.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -6,12 +6,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.ewm.comment.enums.SortType;
+import ru.practicum.ewm.comment.model.Comment;
 import ru.practicum.interaction.api.dto.compilation.comment.dto.CommentDto;
 import ru.practicum.interaction.api.dto.compilation.comment.dto.NewCommentDto;
-import ru.practicum.interaction.api.dto.compilation.comment.enums.SortType;
-import ru.practicum.interaction.api.dto.compilation.comment.mapper.CommentMapper;
-import ru.practicum.interaction.api.dto.compilation.comment.model.Comment;
-import ru.practicum.interaction.api.dto.compilation.comment.repository.CommentRepository;
+import ru.practicum.ewm.comment.mapper.CommentMapper;
+import ru.practicum.ewm.comment.repository.CommentRepository;
 import ru.practicum.ewm.event.enums.State;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.event.repository.EventRepository;

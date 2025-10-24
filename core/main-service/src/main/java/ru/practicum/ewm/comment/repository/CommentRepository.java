@@ -1,8 +1,8 @@
-package ru.practicum.interaction.api.dto.compilation.comment.repository;
+package ru.practicum.ewm.comment.repository;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import ru.practicum.interaction.api.dto.compilation.comment.model.Comment;
+import ru.practicum.ewm.comment.model.Comment;
 
 import java.util.List;
 

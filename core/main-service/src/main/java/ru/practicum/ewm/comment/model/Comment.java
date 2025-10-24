@@ -1,4 +1,4 @@
-package ru.practicum.interaction.api.dto.compilation.comment.model;
+package ru.practicum.ewm.comment.model;
 
 import jakarta.persistence.*;
 import lombok.experimental.FieldDefaults;
