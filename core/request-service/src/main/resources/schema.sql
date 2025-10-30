@@ -3,6 +3,6 @@ CREATE TABLE IF NOT EXISTS participation_requests(
     event_id BIGINT NOT NULL,
     requester_id BIGINT NOT NULL,
     created TIMESTAMP WITHOUT TIME ZONE NOT NULL,
-    status VARCHAR(20) NOT NULL,
+    status VARCHAR(50) NOT NULL,
     CONSTRAINT UQ_PARTICIPANT_PER_EVENT UNIQUE (requester_id, event_id)
     );

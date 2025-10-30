@@ -7,7 +7,15 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import ru.practicum.interaction.api.exception.*;
+import ru.practicum.interaction.api.exception.ConflictDataException;
+import ru.practicum.interaction.api.exception.DuplicateException;
+import ru.practicum.interaction.api.exception.InvalidDateTimeException;
+import ru.practicum.interaction.api.exception.InvalidSortException;
+import ru.practicum.interaction.api.exception.NotFoundException;
+import ru.practicum.interaction.api.exception.NotFoundRecordInBDException;
+import ru.practicum.interaction.api.exception.OperationFailedException;
+import ru.practicum.interaction.api.exception.ServerErrorException;
+import ru.practicum.interaction.api.exception.ValidationException;
 
 @RestControllerAdvice
 @Slf4j

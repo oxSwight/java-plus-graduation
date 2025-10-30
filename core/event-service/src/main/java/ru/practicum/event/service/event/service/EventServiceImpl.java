@@ -51,7 +51,7 @@ public class EventServiceImpl implements EventService {
     private final String CATEGORY_NOT_FOUND = "Категория не найдена.";
     private final String EVENT_NOT_FOUND_IN_DATABASE = "Не найдено событие в БД с ID = ";
 
-    @Value("${eventServiceName:event-service}")
+    @Value("${eventServiceName}")
     private String serviceName;
 
     @Override

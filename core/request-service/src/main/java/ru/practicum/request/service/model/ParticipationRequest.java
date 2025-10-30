@@ -23,7 +23,7 @@ public class ParticipationRequest {
     Long id;
     @Builder.Default
     LocalDateTime created = LocalDateTime.now();
-    @Column(name = "event_id", nullable = false)
+    @Column(name = "event_id")
     Long eventId;
     @Column(name = "requester_id")
     Long requesterId;

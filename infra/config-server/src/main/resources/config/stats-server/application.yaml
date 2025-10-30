@@ -16,6 +16,18 @@ spring:
 
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/ewm-stats
+    url: jdbc:postgresql://localhost:7432/ewm-stats
     username: root
     password: root
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      defaultBreaker:
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10000
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowType: COUNT_BASED
+        minimumNumberOfCalls: 5
+        automaticTransitionFromOpenToHalfOpenEnabled: true
