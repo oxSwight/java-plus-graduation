@@ -3,9 +3,10 @@ package ru.practicum.interaction.api.dto.comment;
 import lombok.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.interaction.api.utils.date.DateTimeFormat;
+
 import java.time.LocalDateTime;
 
+import static ru.practicum.interaction.api.utils.date.DateTimeFormat.TIME_PATTERN;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
@@ -16,10 +17,10 @@ import java.time.LocalDateTime;
 public class CommentDto {
     Long id;
     String text;
-    Long eventId;
+    Long event;
     String eventName;
     String authorName;
     Integer likes;
-    @JsonFormat(pattern = DateTimeFormat.TIME_PATTERN)
+    @JsonFormat(pattern = TIME_PATTERN)
     LocalDateTime created;
 }

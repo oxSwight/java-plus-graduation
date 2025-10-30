@@ -1,12 +1,13 @@
-package ru.practicum.ewm.category.mapper;
+package ru.practicum.event.service.category.mapper;
 
 import lombok.experimental.UtilityClass;
-import ru.practicum.ewm.category.dto.CategoryDto;
-import ru.practicum.ewm.category.dto.NewCategoryDto;
-import ru.practicum.ewm.category.model.Category;
+import ru.practicum.event.service.category.model.Category;
+import ru.practicum.interaction.api.dto.category.CategoryDto;
+import ru.practicum.interaction.api.dto.category.NewCategoryDto;
 
 @UtilityClass
 public class CategoryMapper {
+
     public Category toCategory(NewCategoryDto newCategoryDto) {
         return Category.builder()
                 .name(newCategoryDto.getName())
