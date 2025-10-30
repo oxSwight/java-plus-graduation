@@ -20,10 +20,11 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_id")
     Long id;
+    @Column(nullable = false)
     String text;
-    @Column(name = "event_id")
+    @Column(name = "event_id", nullable = false)
     Long eventId;
-    @Column(name = "author_id")
+    @Column(name = "author_id", nullable = false)
     Long authorId;
     @ElementCollection
     @CollectionTable(name = "comments_likes", joinColumns = @JoinColumn(name = "comment_id"))

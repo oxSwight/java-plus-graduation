@@ -16,9 +16,9 @@ import lombok.experimental.FieldDefaults;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
+    @Column(name = "user_id", nullable = false)
     Long id;
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     String email;
     String name;
 }
