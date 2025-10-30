@@ -1,6 +1,4 @@
 package ru.practicum.ewm.stats.server.service;
-
-
 import ru.practicum.interaction.api.dto.stats.EndpointHitDto;
 import ru.practicum.interaction.api.dto.stats.StatsDto;
 

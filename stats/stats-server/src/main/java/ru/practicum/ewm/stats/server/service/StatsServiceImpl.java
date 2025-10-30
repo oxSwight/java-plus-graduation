@@ -4,9 +4,9 @@ import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.interaction.api.dto.stats.EndpointHitDto;
 import ru.practicum.ewm.stats.server.mapper.DtoMapper;
 import ru.practicum.ewm.stats.server.repository.StatsRepository;
-import ru.practicum.interaction.api.dto.stats.EndpointHitDto;
 import ru.practicum.interaction.api.dto.stats.StatsDto;
 
 import java.time.LocalDateTime;
