@@ -1,8 +1,8 @@
 package ru.practicum.ewm.stats.server.mapper;
 
 import lombok.experimental.UtilityClass;
-import ru.practicum.ewm.stats.dto.EndpointHitDto;
 import ru.practicum.ewm.stats.server.model.EndpointHit;
+import ru.practicum.interaction.api.dto.stats.EndpointHitDto;
 
 @UtilityClass
 public class DtoMapper {
