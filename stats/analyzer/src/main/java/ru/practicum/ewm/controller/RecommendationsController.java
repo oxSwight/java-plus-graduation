@@ -23,7 +23,7 @@ public class RecommendationsController extends RecommendationsControllerGrpc.Rec
             handler.getRecommendationsForUser(request).forEach(responseObserver::onNext);
             responseObserver.onCompleted();
         } catch (Exception e) {
-            log.error("Ошибка получения рекомендаций.");
+            log.error("Ошибка возврата рекомендаций.");
             responseObserver.onError(e);
         }
     }
