@@ -1,6 +1,9 @@
+<<<<<<< HEAD
 #server:
 #  port: 7071
 
+=======
+>>>>>>> 61c9f1016aa0cac0e34042f597cf226ab6032e5d
 spring:
   application:
     name: gateway-server
@@ -8,6 +11,7 @@ spring:
     import: "configserver:"
   cloud:
     config:
+<<<<<<< HEAD
       discovery:
         enabled: true
         serviceId: config-server
@@ -15,11 +19,27 @@ spring:
       retry:
         useRandomPolicy: true
         max-interval: 6000
+=======
+      fail-fast: true
+      retry:
+        useRandomPolicy: true
+        max-interval: 6000
+      discovery:
+        enabled: true
+        serviceId: config-server
+>>>>>>> 61c9f1016aa0cac0e34042f597cf226ab6032e5d
 
 eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka/
   instance:
+<<<<<<< HEAD
     hostname: localhost
     instance-id: "${spring.application.name}:${random.value}"
+=======
+    preferIpAddress: true
+    hostname: localhost
+    instance-id: "${spring.application.name}:${random.value}"
+    leaseRenewalIntervalInSeconds: 10
+>>>>>>> 61c9f1016aa0cac0e34042f597cf226ab6032e5d

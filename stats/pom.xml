@@ -13,11 +13,15 @@
     <packaging>pom</packaging>
 
     <modules>
+<<<<<<< HEAD
         <module>stats-client</module>
         <module>collector</module>
         <module>analyzer</module>
         <module>aggregator</module>
         <module>serialization</module>
+=======
+        <module>stats-server</module>
+>>>>>>> 61c9f1016aa0cac0e34042f597cf226ab6032e5d
     </modules>
 
 </project>

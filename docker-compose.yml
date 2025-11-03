@@ -55,6 +55,12 @@ services:
       config-server:
         condition: service_healthy
     environment:
+<<<<<<< HEAD
+=======
+      #      - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/ewm-stats
+      #      - SPRING_DATASOURCE_USERNAME=root
+      #      - SPRING_DATASOURCE_PASSWORD=root
+>>>>>>> 61c9f1016aa0cac0e34042f597cf226ab6032e5d
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8761/eureka/
       - SERVER_PORT=9090
     healthcheck:
@@ -78,6 +84,50 @@ services:
       interval: 10s
       retries: 15
 
+<<<<<<< HEAD
+=======
+  #  ewm-service:
+  #    build: core/main-service
+  #    container_name: ewm-main-service
+  #    depends_on:
+  #      ewm-db:
+  #        condition: service_healthy
+  #      config-server:
+  #        condition: service_healthy
+  #      stats-server:
+  #        condition: service_healthy
+  #    networks:
+  #      - ewm-net
+  #    environment:
+  #      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/ewm-main
+  #      - SPRING_DATASOURCE_USERNAME=root
+  #      - SPRING_DATASOURCE_PASSWORD=root
+  #      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8761/eureka/
+  #      - SERVER_PORT=8081
+  #    healthcheck:
+  #      test: "curl --fail --silent localhost:8081/actuator/health | grep UP || exit 1"
+  #      timeout: 5s
+  #      interval: 25s
+  #      retries: 10
+
+  #  ewm-db:
+  #    image: postgres:16.1
+  #    container_name: postgres-ewm-main-db
+  #    ports:
+  #      - "8432:5432"
+  #    networks:
+  #      - ewm-net
+  #    environment:
+  #      - POSTGRES_PASSWORD=main
+  #      - POSTGRES_USER=main
+  #      - POSTGRES_DB=ewm-main-db
+  #    healthcheck:
+  #      test: pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER
+  #      timeout: 5s
+  #      interval: 10s
+  #      retries: 15
+
+>>>>>>> 61c9f1016aa0cac0e34042f597cf226ab6032e5d
   user-db:
     image: postgres:16.1
     container_name: user-db
@@ -138,6 +188,7 @@ services:
       interval: 10s
       retries: 15
 
+<<<<<<< HEAD
   analyzer-db:
     image: postgres:16.1
     container_name: analyzer-db
@@ -153,6 +204,8 @@ services:
       interval: 10s
       retries: 15
 
+=======
+>>>>>>> 61c9f1016aa0cac0e34042f597cf226ab6032e5d
   user-service:
     build: core/user-service
     container_name: user-service
@@ -237,6 +290,7 @@ services:
       test: "curl --fail --silent localhost:8084/actuator/health | grep UP || exit 1"
       timeout: 5s
       interval: 25s
+<<<<<<< HEAD
       retries: 10
 
   kafka:
@@ -272,3 +326,6 @@ services:
                                --partitions 1 --replication-factor 1 --if-not-exists \
                                --bootstrap-server kafka:29092'"
     init: true
+=======
+      retries: 10
+>>>>>>> 61c9f1016aa0cac0e34042f597cf226ab6032e5d

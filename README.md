@@ -95,4 +95,8 @@ This design ensures **fault tolerance**, **independent scaling**, and **seamless
 
 #### 1. Build and start all services
 ```bash
+<<<<<<< HEAD
 docker-compose up --build -d
+=======
+docker-compose up --build -d
+>>>>>>> 61c9f1016aa0cac0e34042f597cf226ab6032e5d
