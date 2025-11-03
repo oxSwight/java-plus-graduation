@@ -1,80 +1,72 @@
 server:
-  port: 8080
+        port: 8080
 
 spring:
-<<<<<<< HEAD
-  application:
-    name: gateway
-=======
->>>>>>> 61c9f1016aa0cac0e34042f597cf226ab6032e5d
-  cloud:
-    gateway:
-      discovery:
-        locator:
-          enabled: true
-<<<<<<< HEAD
-          lowerCaseServiceId: true
-      routes:
-=======
-      routes:
+        application:
+                name: gateway
+        cloud:
+                gateway:
+                        discovery:
+                                locator:
+                                        enabled: true
+                                        lowerCaseServiceId: true
+                        routes:
+                                - id: admin_category
+                                  uri: lb://event-service
+                                  predicates:
+                                          - Path=/admin/categories/**
 
->>>>>>> 61c9f1016aa0cac0e34042f597cf226ab6032e5d
-        - id: admin_category
-          uri: lb://event-service
-          predicates:
-            - Path=/admin/categories/**
+                                - id: public_category
+                                  uri: lb://event-service
+                                  predicates:
+                                          - Path=/categories/**
 
-        - id: public_category
-          uri: lb://event-service
-          predicates:
-            - Path=/categories/**
+                                - id: admin_comment
+                                  uri: lb://comment-service
+                                  predicates:
+                                          - Path=/admin/comments/**
 
-        - id: admin_comment
-          uri: lb://comment-service
-          predicates:
-            - Path=/admin/comments/**
+                                - id: private_comment
+                                  uri: lb://comment-service
+                                  predicates:
+                                          - Path=/users/{userId}/comments/**
 
-        - id: private_comment
-          uri: lb://comment-service
-          predicates:
-            - Path=/users/{userId}/comments/**
+                                - id: public_comment
+                                  uri: lb://comment-service
+                                  predicates:
+                                          - Path=/comments/**
 
-        - id: public_comment
-          uri: lb://comment-service
-          predicates:
-            - Path=/comments/**
+                                - id: admin_compilation
+                                  uri: lb://event-service
+                                  predicates:
+                                          - Path=/admin/compilations/**
 
-        - id: admin_compilation
-          uri: lb://event-service
-          predicates:
-            - Path=/admin/compilations/**
+                                - id: public_compilation
+                                  uri: lb://event-service
+                                  predicates:
+                                          - Path=/compilations/**
 
-        - id: public_compilation
-          uri: lb://event-service
-          predicates:
-            - Path=/compilations/**
+                                - id: admin_event
+                                  uri: lb://event-service
+                                  predicates:
+                                          - Path=/admin/events/**
 
-        - id: admin_event
-          uri: lb://event-service
-          predicates:
-            - Path=/admin/events/**
+                                - id: private_event
+                                  uri: lb://event-service
+                                  predicates:
+                                          - Path=/users/{userId}/events/**
 
-        - id: private_event
-          uri: lb://event-service
-          predicates:
-            - Path=/users/{userId}/events/**
+                                - id: public_event
+                                  uri: lb://event-service
+                                  predicates:
+                                          - Path=/events/**
 
-        - id: public_event
-          uri: lb://event-service
-          predicates:
-            - Path=/events/**
+                                - id: participation_request
+                                  uri: lb://request-service
+                                  predicates:
+                                          - Path=/users/{userId}/requests/**
 
-        - id: participation_request
-          uri: lb://request-service
-          predicates:
-            - Path=/users/{userId}/requests/**
-
-        - id: user
-          uri: lb://user-service
-          predicates:
-            - Path=/admin/users/**
+                                - id: user
+                                  uri: lb://user-service
+                                  predicates:
+                                          - Path=/admin/users/**
