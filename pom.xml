@@ -7,11 +7,7 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.3.4</version>
-<<<<<<< HEAD
-		<relativePath/> <!-- lookup parent from repository -->
-=======
 		<relativePath/>
->>>>>>> 61c9f1016aa0cac0e34042f597cf226ab6032e5d
 	</parent>
 
 	<name>Explore With Me</name>
