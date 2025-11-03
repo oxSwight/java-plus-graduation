@@ -53,7 +53,6 @@
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 
-<<<<<<< HEAD
 		<dependency>
 			<groupId>ru.practicum</groupId>
 			<artifactId>stats-client</artifactId>
@@ -65,8 +64,6 @@
 			<artifactId>grpc-client-spring-boot-starter</artifactId>
 			<version>3.1.0.RELEASE</version>
 		</dependency>
-=======
->>>>>>> 61c9f1016aa0cac0e34042f597cf226ab6032e5d
 	</dependencies>
 
 	<build>

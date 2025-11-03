@@ -5,29 +5,16 @@
 
     <parent>
         <groupId>ru.practicum</groupId>
-<<<<<<< HEAD
         <artifactId>explore-with-me</artifactId>
         <version>0.0.1-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
 
-=======
-        <artifactId>infra</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
-<!--        <relativePath/> &lt;!&ndash; lookup parent from repository &ndash;&gt;-->
->>>>>>> 61c9f1016aa0cac0e34042f597cf226ab6032e5d
     </parent>
     <artifactId>discovery-server</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>discovery-server</name>
     <description>discovery-server</description>
 
-<<<<<<< HEAD
-=======
-    <properties>
-        <java.version>21</java.version>
-    </properties>
-
->>>>>>> 61c9f1016aa0cac0e34042f597cf226ab6032e5d
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
