@@ -13,6 +13,7 @@ import  ru.practicum.ewm.grpc.stats.event.*;
 @RequiredArgsConstructor
 public class RecommendationsController extends RecommendationsControllerGrpc.RecommendationsControllerImplBase {
 
+
     private final RecommendationsHandler handler;
 
     @Override
