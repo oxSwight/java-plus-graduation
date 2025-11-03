@@ -18,7 +18,6 @@
         <module>analyzer</module>
         <module>aggregator</module>
         <module>serialization</module>
-        <module>stats-server</module>
     </modules>
 
 </project>
