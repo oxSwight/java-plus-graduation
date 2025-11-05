@@ -31,6 +31,10 @@ public interface AdminParticipationRequestClient {
     @PutMapping("/status/{id}/{status}")
     ParticipationRequestDto setStatusRequest(@PathVariable Long id, @PathVariable Status status)  throws FeignException;
 
+    @GetMapping("/{eventId}/check-user-confirmed/{userId}")
+    boolean checkExistStatusRequest(@PathVariable Long eventId,@PathVariable Long userId,
+                                    @RequestParam Status status);
+
     @GetMapping("/event/{eventId}")
     default List<ParticipationRequestDto> findAllByEventIdFallback(Long eventId, Throwable throwable) {
         return new ArrayList<>();

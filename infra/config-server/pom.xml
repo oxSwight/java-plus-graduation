@@ -4,18 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>ru.practicum</groupId>
-        <artifactId>infra</artifactId>
+        <artifactId>explore-with-me</artifactId>
         <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <artifactId>config-server</artifactId>
-<!--    <version>0.0.1-SNAPSHOT</version>-->
-<!--    <name>config-server</name>-->
-<!--    <description>config-server</description>-->
-
-    <properties>
-        <java.version>21</java.version>
-    </properties>
 
     <dependencies>
 
